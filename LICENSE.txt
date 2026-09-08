@@ -1,0 +1,13 @@
+NURSING STUDENTS CBT MOCK END-USER LICENSE AGREEMENT (EULA)
+
+Copyright © 2026 ThankGod Okoduwa. All Rights Reserved.
+
+Permission is hereby granted to any person obtaining a copy of this software (the "NURSING STUDENTS CBT MOCK") to use, run, and share the live application for personal, non-commercial, and devotional purposes only, subject to the following conditions:
+
+No Source Code Redistribution or Modification: You may not inspect, copy, modify, merge, publish, distribute, sublicense, or sell copies of the underlying source code (HTML, CSS, JavaScript) without express written permission from the author.
+
+Non-Commercial Use: The application and its underlying code may not be used for any commercial purpose, monetized, or bundled into paid products.
+
+Attribution: All visual branding, copyright notices, and author credits (Evangelist ThankGod Okoduwa) must remain intact and visible in all instances of the application.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY.

@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Year Nursing CBT Examination Portal</title>
+    <style>
+        :root {
+            --nursing-blue: #0056b3;
+            --nursing-gold: #e87e04;
+            --nursing-dark: #002b5c;
+            --light-bg: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 15px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border-top: 6px solid var(--nursing-blue);
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            padding: 15px 25px;
+            border-bottom: 2px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nursing-logo-badge {
+            width: 70px;
+            height: 70px;
+            background: var(--nursing-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            border: 3px solid var(--nursing-gold);
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 20px;
+            color: var(--nursing-blue);
+            text-transform: uppercase;
+        }
+
+        .header-title p {
+            margin: 3px 0 0 0;
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .timer-box {
+            background: #fef2f2;
+            border: 2px solid #ef4444;
+            color: #dc2626;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            display: none;
+        }
+
+        .screen { display: none; padding: 25px; }
+        .active-screen { display: block; }
+
+        .student-info-section {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .student-info-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--nursing-blue);
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--nursing-blue);
+        }
+
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .subject-card {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .subject-card:hover {
+            border-color: var(--nursing-blue);
+            background: #f0f7ff;
+        }
+
+        .subject-card input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--nursing-blue);
+            cursor: pointer;
+        }
+
+        .subject-card.selected {
+            border-color: var(--nursing-blue);
+            background: #e6f0fa;
+            color: var(--nursing-dark);
+        }
+
+        .selection-counter {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--nursing-gold);
+            margin-bottom: 10px;
+        }
+
+        .subject-tabs {
+            display: flex;
+            gap: 5px;
+            background: #f1f5f9;
+            padding: 8px 8px 0 8px;
+            border-bottom: 2px solid #cbd5e1;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            background: #e2e8f0;
+            border: none;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #475569;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active-tab {
+            background: var(--nursing-blue);
+            color: white;
+        }
+
+        .q-status-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #e6f0fa;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-weight: bold;
+            color: var(--nursing-dark);
+        }
+
+        .question-box {
+            font-size: 17px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            padding: 12px 15px;
+            border-radius: 6px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-btn:hover {
+            border-color: var(--nursing-blue);
+            background: #f0f7ff;
+        }
+
+        .option-btn.selected {
+            background: var(--nursing-blue);
+            color: white;
+            border-color: var(--nursing-dark);
+        }
+
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            border: none;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary { background: var(--nursing-blue); color: white; }
+        .btn-primary:hover { background: var(--nursing-dark); }
+        .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-secondary:hover { background: #475569; }
+        .btn-submit { background: #16a34a; color: white; }
+        .btn-submit:hover { background: #15803d; }
+        .btn-csv { background: var(--nursing-gold); color: white; }
+        .btn-csv:hover { background: #c66902; }
+
+        .palette-container {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+            gap: 6px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .palette-num {
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .palette-num.answered { background: #bbf7d0; border-color: #22c55e; color: #14532d; }
+        .palette-num.current { border: 2px solid var(--nursing-gold); }
+
+        .score-banner {
+            text-align: center;
+            background: #f0f7ff;
+            border: 2px solid var(--nursing-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .score-banner h2 { margin: 0 0 10px 0; color: var(--nursing-dark); }
+        .total-score { font-size: 32px; font-weight: bold; color: var(--nursing-blue); }
+
+        .review-card {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-success { background: #dcfce7; color: #15803d; }
+        .badge-danger { background: #fee2e2; color: #b91c1c; }
+
+        .portal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background-color: #ffffff;
+            border-bottom: 3px solid #0056b3;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .portal-title h1 {
+            color: #0056b3;
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+
+        .portal-title p {
+            color: #555555;
+            font-size: 0.85rem;
+        }
+
+        .header-images {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .admin-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-right: 15px;
+            border-right: 2px solid #e0e0e0;
+        }
+
+        .admin-card img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #0056b3;
+        }
+
+        .admin-info {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+
+        .admin-info .admin-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #777;
+            font-weight: bold;
+        }
+
+        .admin-info .admin-name {
+            font-size: 0.85rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .admin-table th, .admin-table td {
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .admin-table th {
+            background-color: var(--nursing-blue);
+            color: white;
+        }
+
+        .admin-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        @media (max-width: 650px) {
+            .portal-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .admin-info {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+  <!-- PORTAL HEADER -->
+  <header class="portal-header">
+    <div class="portal-title">
+      <h1>NURSING AND MIDWIFERY COUNCIL EXAMINATION</h1>
+      <p>Final Year Nursing Professional Qualifying CBT Portal</p>
+    </div>
+
+    <div class="header-images">
+      <div class="admin-card">
+        <div class="admin-info">
+          <span class="admin-title" id="header-user-role">PORTAL ADMINISTRATOR</span>
+          <span class="admin-name" id="header-user-name">THANKGOD OKODUWA</span>
+        </div>
+        <img src="admin.jpg" alt="Profile Avatar" id="header-avatar" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22><rect width=%2250%22 height=%2250%22 rx=%2225%22 fill=%22%230056b3%22/><text x=%2225%22 y=%2233%22 font-size=%2222%22 fill=%22white%22 text-anchor=%22middle%22 font-family=%22sans-serif%22>A</text></svg>'">
+      </div>
+    </div>
+  </header>
+
+<div class="container">
+    <div class="header">
+        <div class="logo-box">
+            <div class="nursing-logo-badge">NMC<br>CBT</div>
+            <div class="header-title">
+                <h1>FINAL YEAR NURSING PROFESSIONAL EXAMINATION</h1>
+                <p> Nursing Mock CBT (50 Questions Per Exam • 30 Minutes)</p>
+            </div>
+        </div>
+        <div id="timer-box" class="timer-box">00:30:00</div>
+    </div>
+
+    <!-- Step 1: Registration & Subject Selection Screen -->
+    <div id="setup-screen" class="screen active-screen">
+        
+        <!-- Student Information Form -->
+        <div class="student-info-section">
+            <h3>Nursing Student Profile & Registration</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="student-name">Full Name *</label>
+                    <input type="text" id="student-name" placeholder="e.g. Faith Okoduwa" oninput="validateRegistrationForm()">
+                </div>
+                <div class="form-group">
+                    <label for="student-regno">Index / Student Reg No. *</label>
+                    <input type="text" id="student-regno" placeholder="e.g. NRS/2026/0412" oninput="validateRegistrationForm()">
+                </div>
+                <div class="form-group">
+                    <label for="student-gender">Gender</label>
+                    <select id="student-gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="color: var(--nursing-dark); margin-top: 0;">Select 1 Nursing Course for Your Examination</h3>
+        <div class="selection-counter" id="selection-counter">Selected: None</div>
+        
+        <div class="subject-grid" id="subject-selector-grid"></div>
+
+        <button class="btn btn-primary" id="start-btn" onclick="startExam()" disabled style="width: 100%; margin-top: 15px;">Start Examination</button>
+
+        <!-- Saved Results Section (Admin - Password Protected) -->
+        <div style="margin-top: 35px; border-top: 2px solid #e2e8f0; padding-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h3 style="color: var(--nursing-dark); margin: 0;">Admin Score Records</h3>
+            </div>
+
+            <div id="admin-lock-screen" style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 25px 20px; text-align: center;">
+                <div style="font-size: 32px; margin-bottom: 8px;">🔒</div>
+                <p style="margin: 0 0 15px 0; color: #475569; font-weight: 600;">This section is restricted to administrators.</p>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; max-width: 400px; margin: 0 auto;">
+                    <input type="password" id="admin-password-input" placeholder="Enter admin password" style="flex: 1; min-width: 180px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;" onkeypress="if(event.key==='Enter'){ checkAdminPassword(); }">
+                    <button class="btn btn-primary" onclick="checkAdminPassword()" style="padding: 10px 18px;">Unlock</button>
+                </div>
+                <p id="admin-password-error" style="color: #dc2626; font-size: 13px; margin-top: 10px; display: none;">Incorrect password. Please try again.</p>
+            </div>
+
+            <div id="admin-content" style="display: none;">
+                <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <button class="btn btn-csv" onclick="exportScoresCSV()">Export All Scores (CSV)</button>
+                    <button class="btn btn-secondary" onclick="clearScoreRecords()" style="background: #dc2626; padding: 12px 16px;">Clear Records</button>
+                    <button class="btn btn-secondary" onclick="lockAdminSection()" style="padding: 12px 16px;">Lock Admin Section</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Reg Number</th>
+                                <th>Full Name</th>
+                                <th>Gender</th>
+                                <th>Total Score</th>
+                                <th>Selected Course</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scores-table-body">
+                            <tr><td colspan="6" style="text-align: center; color: #64748b;">No saved exam results found.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 35px; border-top: 2px solid #e2e8f0; padding-top: 20px;">
+                    <h3 style="color: var(--nursing-dark); margin: 0 0 15px 0;">Manage Courses & Questions</h3>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                        <input type="text" id="new-subject-name" placeholder="New course name (e.g. Critical Care Nursing)" style="flex: 1; min-width: 200px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+                        <button class="btn btn-primary" onclick="addNewSubject()" style="padding: 10px 16px;">+ Add Course</button>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 15px;">
+                        <label for="admin-subject-select" style="font-weight: 600; color: var(--nursing-dark);">Manage Course:</label>
+                        <select id="admin-subject-select" onchange="renderAdminQuestionList()" style="flex: 1; min-width: 200px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;"></select>
+                        <button class="btn btn-secondary" onclick="deleteSelectedSubject()" style="background: #dc2626; padding: 10px 16px;">Delete This Course</button>
+                    </div>
+
+                    <div id="admin-question-form" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                        <h4 id="question-form-title" style="margin: 0 0 12px 0; color: var(--nursing-dark);">Add New Question</h4>
+                        <input type="hidden" id="edit-question-index" value="-1">
+
+                        <textarea id="new-question-text" placeholder="Question text" rows="2" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-bottom: 10px; box-sizing: border-box; font-family: inherit;"></textarea>
+
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="radio" name="correct-option-radio" id="correct-radio-0" value="0" checked>
+                                <input type="text" id="option-input-0" placeholder="Option A" style="flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="radio" name="correct-option-radio" id="correct-radio-1" value="1">
+                                <input type="text" id="option-input-1" placeholder="Option B" style="flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="radio" name="correct-option-radio" id="correct-radio-2" value="2">
+                                <input type="text" id="option-input-2" placeholder="Option C" style="flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="radio" name="correct-option-radio" id="correct-radio-3" value="3">
+                                <input type="text" id="option-input-3" placeholder="Option D" style="flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+                            </div>
+                            <p style="margin: 0; font-size: 12px; color: #64748b;">Select the radio button next to the correct option.</p>
+                        </div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-primary" onclick="saveQuestion()" style="padding: 10px 16px;">Save Question</button>
+                            <button class="btn btn-secondary" onclick="cancelQuestionEdit()" style="padding: 10px 16px;">Cancel / Clear Form</button>
+                        </div>
+                    </div>
+
+                    <div id="admin-question-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Active Examination Screen -->
+    <div id="exam-screen" class="screen">
+        <div class="subject-tabs" id="subject-tabs"></div>
+
+        <div class="q-status-bar">
+            <span id="question-tracker">Course: Medical-Surgical Nursing • Question 1 of 50</span>
+            <span id="answered-tracker">Answered: 0 / 50</span>
+        </div>
+
+        <div class="question-box" id="question-text">Loading question...</div>
+        <div class="options-grid" id="options-container"></div>
+
+        <div class="nav-controls">
+            <button class="btn btn-secondary" onclick="navigate(-1)">Previous</button>
+            <button class="btn btn-secondary" onclick="navigate(1)">Next</button>
+            <button class="btn btn-submit" onclick="confirmSubmission()">Submit Exam</button>
+        </div>
+
+        <div class="palette-container">
+            <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #475569;">Question Navigation Palette:</div>
+            <div class="palette-grid" id="palette-grid"></div>
+        </div>
+    </div>
+
+    <!-- Step 3: Result & Answers Review Screen -->
+    <div id="result-screen" class="screen">
+        <div class="score-banner">
+            <h2>Examination Completed</h2>
+            <div id="candidate-details-display" style="font-size: 16px; margin-bottom: 10px; color: #475569;"></div>
+            <div class="total-score" id="final-aggregate">0 / 100</div>
+            <div id="subject-score-breakdown" style="margin-top: 15px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;"></div>
+        </div>
+
+        <h3 style="color: var(--nursing-dark);">Detailed Answer Review & Corrections</h3>
+        <div id="review-container"></div>
+
+        <button class="btn btn-primary" onclick="resetPortal()" style="width: 100%; margin-top: 20px;">Retake Exam with New Shuffled Questions</button>
+    </div>
+</div>
+
+<script>
+const rawQuestionBank = {
+    "Medical-Surgical Nursing": [
+        { q: "Which of the following is the priority intervention for a patient presenting with an acute myocardial infarction?", options: ["Administer high-flow oxygen", "Obtain a 12-lead ECG", "Administer sublingual nitroglycerin", "Obtain blood samples for cardiac enzymes"], answer: "Administer high-flow oxygen" },
+        { q: "A nurse is caring for a post-operative patient following a total thyroidectomy. Which clinical sign indicates accidental removal of the parathyroid glands?", options: ["Chvostek's sign", "Trousseau's sign", "Positive Homan's sign", "Both A and B"], answer: "Both A and B" },
+        { q: "In managing a patient with acute pancreatitis, which order should the nurse anticipate?", options: ["NPO status and nasogastric suctioning", "High-fat, high-protein diet", "Oral pancreatic enzyme replacement before meals", "Fluid restriction to 1 L/day"], answer: "NPO status and nasogastric suctioning" },
+        { q: "What is the primary pathophysiology underlying type 1 diabetes mellitus?", options: ["Autoimmune destruction of pancreatic beta cells", "Insulin resistance in peripheral tissues", "Excessive glucagon secretion by alpha cells", "Impaired hepatic glucose regulation"], answer: "Autoimmune destruction of pancreatic beta cells" },
+        { q: "A client with Chronic Obstructive Pulmonary Disease (COPD) receives supplemental oxygen. Why is oxygen flow rate kept low (1-2 L/min)?", options: ["High oxygen levels remove the hypoxic drive to breathe", "High oxygen levels trigger bronchospasm", "COPD patients cannot tolerate nasal cannulas", "To prevent oxygen toxicity in alveolar capillaries"], answer: "High oxygen levels remove the hypoxic drive to breathe" },
+        { q: "Which arterial blood gas (ABG) result reflects uncompensated metabolic acidosis?", options: ["pH 7.28, PaCO2 38 mmHg, HCO3- 18 mEq/L", "pH 7.50, PaCO2 30 mmHg, HCO3- 24 mEq/L", "pH 7.31, PaCO2 50 mmHg, HCO3- 26 mEq/L", "pH 7.48, PaCO2 42 mmHg, HCO3- 30 mEq/L"], answer: "pH 7.28, PaCO2 38 mmHg, HCO3- 18 mEq/L" },
+        { q: "What is the classical triage finding in a patient with suspected increased intracranial pressure (ICP)?", options: ["Cushing's triad: Hypertension, Bradycardia, Irregular respiration", "Beck's triad: Hypotension, JVD, Muffled heart sounds", "Virchow's triad: Stasis, Hypercoagulability, Endothelial injury", "Charcot's triad: Fever, Jaundice, RUQ pain"], answer: "Cushing's triad: Hypertension, Bradycardia, Irregular respiration" },
+        { q: "A patient with deep vein thrombosis (DVT) develops sudden dyspnea and chest pain. What is the immediate priority action?", options: ["Place the patient in high Fowler's position and administer oxygen", "Administer subcutaneous low-molecular-weight heparin", "Notify the physician immediately", "Obtain a chest X-ray"], answer: "Place the patient in high Fowler's position and administer oxygen" },
+        { q: "Which lab value requires immediate intervention for a patient on loop diuretic therapy (Furosemide)?", options: ["Serum Potassium 2.8 mEq/L", "Serum Sodium 138 mEq/L", "Blood Urea Nitrogen 18 mg/dL", "Serum Creatinine 0.9 mg/dL"], answer: "Serum Potassium 2.8 mEq/L" },
+        { q: "Which medication is considered the first-line treatment for an acute anaphylactic reaction?", options: ["Epinephrine 1:1,000 IM", "Diphenhydramine IV", "Hydrocortisone IV", "Albuterol nebulization"], answer: "Epinephrine 1:1,000 IM" },
+        { q: "A patient with liver cirrhosis presents with ascites. Which dietary restriction is essential?", options: ["Sodium restriction", "Fluid restriction to 500 mL/day", "Protein restriction to zero", "Potassium restriction"], answer: "Sodium restriction" },
+        { q: "What is the earliest sign of compartment syndrome in a patient with a leg cast?", options: ["Severe pain unrelieved by narcotics", "Loss of distal pulse", "Pallor and cold extremity", "Paralysis of toes"], answer: "Severe pain unrelieved by narcotics" },
+        { q: "A patient diagnosed with acute appendicitis reports a sudden disappearance of pain. What should the nurse suspect?", options: ["Rupture or perforation of the appendix", "Spontaneous resolution of inflammation", "Effective response to IV analgesics", "Passage of an appendiceal fecalith"], answer: "Rupture or perforation of the appendix" },
+        { q: "Which electrocardiogram (ECG) change is characteristic of hyperkalemia?", options: ["Tall, peaked T waves", "ST segment depression", "Prominent U waves", "Inverted P waves"], answer: "Tall, peaked T waves" },
+        { q: "When caring for a patient with a chest tube connected to a water-seal drainage system, continuous bubbling in the water-seal chamber indicates:", options: ["An air leak in the system or patient's pleural space", "Normal suction operation", "Full expansion of the affected lung", "Blockage in the drainage tubing"], answer: "An air leak in the system or patient's pleural space" },
+        { q: "Which nursing intervention is essential to prevent atelectasis in a post-operative abdominal surgery patient?", options: ["Encouraging the use of an incentive spirometer hourly", "Maintaining strict bed rest for 48 hours", "Administering cough suppressants", "Restricting fluid intake"], answer: "Encouraging the use of an incentive spirometer hourly" },
+        { q: "In Parkinson's disease, the degeneration of neurons occurs primarily in which brain region?", options: ["Substantia nigra", "Cerebellum", "Hippocampus", "Hypothalamus"], answer: "Substantia nigra" },
+        { q: "Which assessment finding confirms proper placement of a nasogastric (NG) tube before initiating tube feedings?", options: ["Radiographic (X-ray) verification", "Aspiration of green gastric fluid", "pH testing showing pH < 5", "Auscultation of air rush over stomach"], answer: "Radiographic (X-ray) verification" },
+        { q: "A patient with Addison's disease is at risk for Addisonian crisis. Which symptom is typical of this crisis?", options: ["Severe hypotension and vascular collapse", "Severe hypertension and tachycardia", "Hyperglycemia and moon face", "Fluid retention and hypernatremia"], answer: "Severe hypotension and vascular collapse" },
+        { q: "Which diagnostic test provides a definitive diagnosis for Pernicious Anemia?", options: ["Schilling test / Vitamin B12 level test", "Bone marrow biopsy", "Serum iron binding capacity", "Complete blood count"], answer: "Schilling test / Vitamin B12 level test" },
+        { q: "What position is recommended for a patient immediately following a lumbar puncture?", options: ["Flat supine position for 4 to 12 hours", "High Fowler's position", "Prone position with head elevated", "Trendelenburg position"], answer: "Flat supine position for 4 to 12 hours" },
+        { q: "Which medication should be held for 48 hours before and after a contrast CT scan to avoid lactic acidosis?", options: ["Metformin", "Lisinopril", "Amlodipine", "Atorvastatin"], answer: "Metformin" },
+        { q: "A patient with peptic ulcer disease experiences sudden, severe upper abdominal pain that radiates to the shoulder, accompanied by a board-like abdomen. The nurse suspects:", options: ["Perforated ulcer", "Gastric outlet obstruction", "Upper GI hemorrhage", "Acute cholecystitis"], answer: "Perforated ulcer" },
+        { q: "Which dietary instruction is crucial for a patient diagnosed with Celiac Disease?", options: ["Strict gluten-free diet (avoid wheat, barley, rye)", "Low-protein, high-carbohydrate diet", "Lactose-free diet", "Low-fat, high-fiber diet"], answer: "Strict gluten-free diet (avoid wheat, barley, rye)" },
+        { q: "Which clinical manifestation is a classic hallmark of Systemic Lupus Erythematosus (SLE)?", options: ["Butterfly rash across nose and cheeks", "Koplik spots in buccal mucosa", "Jaundice and pruritus", "Heberden's nodes on fingers"], answer: "Butterfly rash across nose and cheeks" },
+        { q: "In a patient suffering from hypovolemic shock, what is the primary initial intravenous fluid of choice?", options: ["0.9% Normal Saline or Lactated Ringer's", "Dextrose 5% in water (D5W)", "0.45% Normal Saline", "Dextrose 10% in water"], answer: "0.9% Normal Saline or Lactated Ringer's" },
+        { q: "Which assessment finding is characteristic of Cushing's Syndrome?", options: ["Truncal obesity, moon face, and purple striae", "Weight loss, hyperpigmentation, and hypotension", "Exophthalmos, tremor, and heat intolerance", "Tetany, carpopedal spasm, and dry skin"], answer: "Truncal obesity, moon face, and purple striae" },
+        { q: "What is the primary cause of Esophageal Varices in chronic liver failure?", options: ["Portal hypertension", "Systemic hypertension", "Bile duct obstruction", "Chronic reflux esophagitis"], answer: "Portal hypertension" },
+        { q: "A patient receiving blood transfusion reports chills, lower back pain, and fever 15 minutes after start. What is the nurse's first action?", options: ["Stop the blood transfusion immediately", "Slow down the rate of infusion", "Administer diphenhydramine IV", "Notify the physician"], answer: "Stop the blood transfusion immediately" },
+        { q: "Which sign indicates meningeal irritation in a patient with suspected bacterial meningitis?", options: ["Kernig's sign and Brudzinski's sign", "Trousseau's sign and Chvostek's sign", "Romberg's sign and Babinski's sign", "Cushing's sign and Allen's sign"], answer: "Kernig's sign and Brudzinski's sign" },
+        { q: "What is the primary mechanism of action of ACE inhibitors (e.g., Lisinopril)?", options: ["Inhibit conversion of Angiotensin I to Angiotensin II", "Block beta-1 adrenergic receptors in the heart", "Block calcium channels in vascular smooth muscle", "Promote sodium and water excretion in distal tubules"], answer: "Inhibit conversion of Angiotensin I to Angiotensin II" },
+        { q: "Which vital sign modification is required prior to administering Digoxin?", options: ["Apical pulse rate for 1 full minute (Hold if < 60 bpm)", "Blood pressure measurement (Hold if systolic < 100 mmHg)", "Respiratory rate assessment (Hold if < 12/min)", "Temperature check"], answer: "Apical pulse rate for 1 full minute (Hold if < 60 bpm)" },
+        { q: "Which physical finding is associated with right-sided heart failure?", options: ["Peripheral edema and jugular vein distension", "Pulmonary crackles and orthopnea", "Hemoptysis and paroxysmal nocturnal dyspnea", "Decreased urine output and pulmonary edema"], answer: "Peripheral edema and jugular vein distension" },
+        { q: "In Renal Failure, what electrolyte imbalance is most dangerous to cardiac conduction?", options: ["Hyperkalemia", "Hyponatremia", "Hypocalcemia", "Hypermagnesemia"], answer: "Hyperkalemia" },
+        { q: "Which position is optimal for a patient experiencing acute pulmonary edema?", options: ["High Fowler's position with legs dangling", "Supine position with feet elevated", "Left lateral recumbent position", "Trendelenburg position"], answer: "High Fowler's position with legs dangling" },
+        { q: "What is the hallmark symptom of Myasthenia Gravis?", options: ["Fluctuating muscle weakness that worsens with activity", "Progressive symmetric ascending paralysis", "Resting tremors and muscle rigidity", "Sudden sharp facial nerve pain"], answer: "Fluctuating muscle weakness that worsens with activity" },
+        { q: "In caring for a burn patient during the emergent phase (first 24-48 hours), the principal concern is:", options: ["Hypovolemic shock due to fluid shifting", "Sepsis from wound infection", "Hyperkalemia due to cell destruction", "Contracture formation"], answer: "Hypovolemic shock due to fluid shifting" },
+        { q: "According to Rule of Nines, what percentage of total body surface area (TBSA) is assigned to the anterior trunk?", options: ["18%", "9%", "36%", "27%"], answer: "18%" },
+        { q: "Which diagnostic result indicates effective control of blood glucose over the past 3 months?", options: ["HbA1c < 7.0%", "Fasting blood glucose of 110 mg/dL", "Postprandial glucose < 140 mg/dL", "Urine ketone level negative"], answer: "HbA1c < 7.0%" },
+        { q: "Which classification of medication is used to reduce intracranial pressure in head injury patients?", options: ["Osmotic diuretic (Mannitol)", "Loop diuretic (Furosemide)", "Thiazide diuretic", "Carbonic anhydrase inhibitor"], answer: "Osmotic diuretic (Mannitol)" },
+        { q: "A patient with Chronic Kidney Disease exhibits uremic frost on the skin. What causes this?", options: ["Crystallization of urea urea excreted through sweat glands", "Deposition of calcium phosphate crystals", "Bilirubin accumulation in subcutaneous tissues", "Severe skin infection"], answer: "Crystallization of urea urea excreted through sweat glands" },
+        { q: "What is the hallmark clinical sign of Multiple Sclerosis?", options: ["Demyelination of CNS axons causing variable neurological deficits", "Loss of dopamine receptors in basal ganglia", "Peripheral nerve demyelination following viral infection", "Degeneration of upper and lower motor neurons"], answer: "Demyelination of CNS axons causing variable neurological deficits" },
+        { q: "Which health condition is a major risk factor for developing Osteoarthritis?", options: ["Obesity and joint wear-and-tear", "Autoimmune inflammatory destruction", "Uric acid crystal deposition", "Vitamin D deficiency"], answer: "Obesity and joint wear-and-tear" },
+        { q: "Which diet is recommended for a patient in Gout exacerbation?", options: ["Low-purine diet (avoid red meat, organ meats, shellfish)", "High-protein, low-carbohydrate diet", "Low-calcium, low-sodium diet", "High-fat, low-residue diet"], answer: "Low-purine diet (avoid red meat, organ meats, shellfish)" },
+        { q: "Which laboratory test is most specific for diagnosing Acute Pancreatitis?", options: ["Serum Lipase", "Serum Amylase", "Serum Bilirubin", "White Blood Cell count"], answer: "Serum Lipase" },
+        { q: "What is the hallmark symptom of Graves' Disease?", options: ["Exophthalmos, heat intolerance, and goiter", "Cold intolerance, weight gain, and myxedema", "Hypotension, hyponatremia, and hyperpigmentation", "Moon face, hirsutism, and hypertension"], answer: "Exophthalmos, heat intolerance, and goiter" },
+        { q: "Which nursing intervention is essential when caring for a client with a continuous bladder irrigation (CBI) post-TURP?", options: ["Adjust irrigation rate to keep urine light pink and free of clots", "Maintain a fixed drip rate of 60 drops/min", "Instill 30 mL normal saline manually every 2 hours", "Clamp the catheter if dark red blood appears"], answer: "Adjust irrigation rate to keep urine light pink and free of clots" },
+        { q: "A patient with Guillain-Barré Syndrome requires frequent monitoring of which critical function?", options: ["Respiratory capacity and vital capacity", "Renal function and urine output", "Hepatic enzymes", "Joint mobility and reflexes"], answer: "Respiratory capacity and vital capacity" },
+        { q: "Which medication is an antidote for Heparin overdose?", options: ["Protamine Sulfate", "Vitamin K", "Aminocaproic Acid", "Flumazenil"], answer: "Protamine Sulfate" },
+        { q: "What is the antidote for Warfarin (Coumadin) toxicity?", options: ["Vitamin K (Phytonadione)", "Protamine Sulfate", "Naloxone", "Acetylcysteine"], answer: "Vitamin K (Phytonadione)" }
+    ],
+    "Maternal & Child Health Nursing": [
+        { q: "What is Naegele's rule for estimating the expected date of delivery (EDD)?", options: ["LMP - 3 months + 7 days + 1 year", "LMP + 3 months - 7 days + 1 year", "LMP - 7 days + 3 months", "LMP + 9 months - 7 days"], answer: "LMP - 3 months + 7 days + 1 year" },
+        { q: "Which structural shunt connects the pulmonary artery to the aorta in fetal circulation?", options: ["Ductus arteriosus", "Ductus venosus", "Foramen ovale", "Umbilical vein"], answer: "Ductus arteriosus" },
+        { q: "A pregnant woman at 32 weeks gestation experiences painless, bright red vaginal bleeding. What condition should the nurse suspect?", options: ["Placenta Previa", "Abruptio Placentae", "Uterine Rupture", "Ectopic Pregnancy"], answer: "Placenta Previa" },
+        { q: "What is the classic triad of symptoms defining Preeclampsia?", options: ["Hypertension, Proteinuria, and Edema", "Hypertension, Glycosuria, and Seizures", "Hypotension, Proteinuria, and Jaundice", "Hypertension, Hematuria, and Excessive Weight Loss"], answer: "Hypertension, Proteinuria, and Edema" },
+        { q: "Which medication is the drug of choice for preventing and treating eclamptic seizures?", options: ["Magnesium Sulfate", "Diazepam", "Phenytoin", "Hydralazine"], answer: "Magnesium Sulfate" },
+        { q: "What toxic reaction symptom indicates early Magnesium Sulfate toxicity?", options: ["Loss of deep tendon reflexes (Patellar reflex)", "Respiratory rate of 18 breaths/min", "Urine output of 50 mL/hour", "Increased blood pressure"], answer: "Loss of deep tendon reflexes (Patellar reflex)" },
+        { q: "What antidote must be kept immediately available when administering Magnesium Sulfate?", options: ["Calcium Gluconate", "Protamine Sulfate", "Naloxone", "Atropine Sulfate"], answer: "Calcium Gluconate" },
+        { q: "During labor monitoring, variable decelerations on fetal heart rate tracing usually indicate:", options: ["Umbilical cord compression", "Uteroplacental insufficiency", "Head compression during contraction", "Fetal hypoxia and acidosis"], answer: "Umbilical cord compression" },
+        { q: "Late decelerations on a fetal monitor tracing suggest:", options: ["Uteroplacental insufficiency", "Head compression", "Umbilical cord prolapse", "Maternal hypotension during epidural"], answer: "Uteroplacental insufficiency" },
+        { q: "What is the primary objective of administering Rh human immune globulin (RhoGAM) to an Rh-negative mother?", options: ["To prevent maternal antibody formation against Rh-positive fetal blood", "To treat hemolytic anemia in the newborn", "To induce passive immunity in the fetus", "To prevent ABO incompatibility"], answer: "To prevent maternal antibody formation against Rh-positive fetal blood" },
+        { q: "RhoGAM should be administered to an unsensitized Rh-negative mother within how many hours post-delivery of an Rh-positive infant?", options: ["72 hours", "24 hours", "48 hours", "12 hours"], answer: "72 hours" },
+        { q: "At what stage of labor does full cervical dilation (10 cm) to complete birth of the baby occur?", options: ["Second Stage", "First Stage", "Third Stage", "Fourth Stage"], answer: "Second Stage" },
+        { q: "What constitutes the Third Stage of labor?", options: ["From delivery of the baby to delivery of the placenta", "From onset of regular contractions to full dilation", "From delivery of placenta to 2 hours postpartum", "Active pushing phase"], answer: "From delivery of the baby to delivery of the placenta" },
+        { q: "Which APGAR score range at 5 minutes indicates a newborn in good physiological condition requiring minimal care?", options: ["7 to 10", "4 to 6", "0 to 3", "5 to 8"], answer: "7 to 10" },
+        { q: "A newborn APGAR score evaluates 5 criteria including:", options: ["Heart rate, Respiratory effort, Muscle tone, Reflex irritability, Color", "Heart rate, Respiratory rate, Temperature, Weight, Reflexes", "Pulse, Cry, Sucking reflex, Pupil response, Color", "Blood pressure, Heart rate, Respiration, Tone, Temperature"], answer: "Heart rate, Respiratory effort, Muscle tone, Reflex irritability, Color" },
+        { q: "Which reflex is demonstrated when an infant turns their head toward a cheek stroke and opens their mouth?", options: ["Rooting reflex", "Moro reflex", "Sucking reflex", "Babinski reflex"], answer: "Rooting reflex" },
+        { q: "What is the primary cause of Postpartum Hemorrhage (PPH)?", options: ["Uterine Atony", "Laceration of genital tract", "Retained placental fragments", "Coagulopathy"], answer: "Uterine Atony" },
+        { q: "Which medication is routinely administered IM to the mother immediately after delivery of the anterior shoulder to prevent PPH?", options: ["Oxytocin (Syntocinon)", "Methylergonovine", "Misoprostol", "Carboprost"], answer: "Oxytocin (Syntocinon)" },
+        { q: "Lochia rubra typically occurs during which postpartum period?", options: ["Days 1 to 3 postpartum", "Days 4 to 10 postpartum", "Days 10 to 14 postpartum", "After 3 weeks postpartum"], answer: "Days 1 to 3 postpartum" },
+        { q: "Lochia alba is characterized as:", options: ["Yellowish-white discharge occurring from day 10 up to 3-6 weeks postpartum", "Pinkish-brown discharge from day 4 to 10", "Bright red blood discharge first 3 days", "Foul-smelling bloody discharge"], answer: "Yellowish-white discharge occurring from day 10 up to 3-6 weeks postpartum" },
+        { q: "What is the leading cause of maternal mortality worldwide?", options: ["Postpartum Hemorrhage", "Preeclampsia/Eclampsia", "Postpartum Sepsis", "Obstructed Labor"], answer: "Postpartum Hemorrhage" },
+        { q: "Hyperemesis gravidarum leads to which metabolic imbalance if untreated?", options: ["Metabolic Alkalosis due to loss of HCl from vomiting", "Metabolic Acidosis", "Respiratory Alkalosis", "Respiratory Acidosis"], answer: "Metabolic Alkalosis due to loss of HCl from vomiting" },
+        { q: "Which vitamin supplementation recommended preconception reduces neural tube defects such as spina bifida?", options: ["Folic Acid (Vitamin B9)", "Vitamin C", "Vitamin B12", "Pyridoxine (Vitamin B6)"], answer: "Folic Acid (Vitamin B9)" },
+        { q: "What classic sign indicates Abruptio Placentae?", options: ["Painful dark red vaginal bleeding with rigid, board-like uterus", "Painless bright red bleeding with soft relaxed uterus", "Watery pink vaginal discharge with mild cramps", "Heavy bleeding without abdominal pain"], answer: "Painful dark red vaginal bleeding with rigid, board-like uterus" },
+        { q: "In a pregnant client with gestational diabetes, target fasting blood sugar should be kept below:", options: ["95 mg/dL", "126 mg/dL", "140 mg/dL", "200 mg/dL"], answer: "95 mg/dL" },
+        { q: "The fundal height at 20 weeks of gestation is typically palpated at:", options: ["Level of the umbilicus", "Symphysis pubis", "Xiphoid process", "Midway between pubis and umbilicus"], answer: "Level of the umbilicus" },
+        { q: "Which fetal presentation is most common and optimal for vaginal delivery?", options: ["Cephalic (Vertex) presentation", "Breech presentation", "Shoulder presentation", "Face presentation"], answer: "Cephalic (Vertex) presentation" },
+        { q: "What is the primary hazard of premature rupture of membranes (PROM)?", options: ["Intrauterine infection (Chorioamnionitis)", "Placental abruption", "Preterm labor", "Cord prolapse"], answer: "Intrauterine infection (Chorioamnionitis)" },
+        { q: "A nurse assesses a newborn and notes edema of the scalp that crosses suture lines. This is documented as:", options: ["Caput succedaneum", "Cephalohematoma", "Subgaleal hemorrhage", "Hydrocephalus"], answer: "Caput succedaneum" },
+        { q: "Cephalohematoma in a newborn is characterized as:", options: ["Collection of blood between periosteum and skull bone that does NOT cross suture lines", "Edema of scalp crossing suture lines", "Fluid collection beneath scalp", "Cranial bone fractures"], answer: "Collection of blood between periosteum and skull bone that does NOT cross suture lines" },
+        { q: "Which newborn screening test is conducted to prevent severe intellectual disability through early dietary intervention?", options: ["Phenylketonuria (PKU) test", "Glucose-6-phosphate deficiency test", "Sickle cell screen", "Cystic fibrosis test"], answer: "Phenylketonuria (PKU) test" },
+        { q: "What is physiological jaundice in newborns?", options: ["Jaundice appearing after 24 hours of life due to immature liver function", "Jaundice within first 24 hours due to hemolytic disease", "Jaundice caused by biliary atresia", "Jaundice due to ABO incompatibility"], answer: "Jaundice appearing after 24 hours of life due to immature liver function" },
+        { q: "Phototherapy treatment for neonatal hyperbilirubinemia assists by converting unconjugated bilirubin into:", options: ["Water-soluble photoisomers excreted in bile and urine", "Conjugated bilirubin in liver", "Albumin-bound bilirubin complexes", "Urobilinogen in intestine"], answer: "Water-soluble photoisomers excreted in bile and urine" },
+        { q: "When caring for an infant under phototherapy, the nurse must ensure:", options: ["Eyes and genitalia are covered and hydration is maintained", "Infant stays fully clothed in warm blankets", "Therapy is discontinued during feedings", "Infant is kept in prone position strictly"], answer: "Eyes and genitalia are covered and hydration is maintained" },
+        { q: "What is the primary cause of Respiratory Distress Syndrome (RDS) in premature infants?", options: ["Surfactant deficiency leading to alveolar collapse", "Aspiration of meconium during birth", "Immature pulmonary vascular resistance", "Incomplete development of diaphragm"], answer: "Surfactant deficiency leading to alveolar collapse" },
+        { q: "Which congenital cardiac defect involves four distinct anomalies (VSD, Pulmonary Stenosis, Overriding Aorta, RV Hypertrophy)?", options: ["Tetralogy of Fallot", "Transposition of Great Arteries", "Coarctation of Aorta", "Patent Ductus Arteriosus"], answer: "Tetralogy of Fallot" },
+        { q: "What intervention should a nurse perform first during a 'Tet spell' (hypercyanotic episode) in an infant with Tetralogy of Fallot?", options: ["Place infant in knee-chest position", "Administer high-dose oxygen", "Administer IV Morphine", "Start IV fluid bolus"], answer: "Place infant in knee-chest position" },
+        { q: "Which infant reflex normally disappears around 3 to 4 months of age?", options: ["Moro (startle) reflex", "Babinski reflex", "Plantar grasp reflex", "Blinking reflex"], answer: "Moro (startle) reflex" },
+        { q: "A positive Babinski sign in a 2-year-old child (fanning of toes) indicates:", options: ["Abnormal neurological finding (Upper motor neuron lesion)", "Normal developmental response", "Immature peripheral reflex", "L5 nerve root irritation"], answer: "Abnormal neurological finding (Upper motor neuron lesion)" },
+        { q: "What is the hallmark clinical feature of Croup (Laryngotracheobronchitis) in young children?", options: ["Barking seal-like cough and inspiratory stridor", "High fever and drooling", "Wheezing and prolonged expiration", "Paroxysmal coughing bursts"], answer: "Barking seal-like cough and inspiratory stridor" },
+        { q: "Which pediatric emergency is characterized by high fever, drooling, dysphagia, and tripod positioning?", options: ["Acute Epiglottitis", "Croup", "Bronchiolitis", "Foreign body aspiration"], answer: "Acute Epiglottitis" },
+        { q: "What action is strictly CONTRAINDICATED in a child with suspected Acute Epiglottitis?", options: ["Examining the throat with a tongue blade", "Administering humidified oxygen", "Obtaining arterial blood gases", "Keeping child in parent's lap"], answer: "Examining the throat with a tongue blade" },
+        { q: "Which virus is the primary causative agent of Bronchiolitis in infants under 1 year?", options: ["Respiratory Syncytial Virus (RSV)", "Influenza A Virus", "Adenovirus", "Rhinovirus"], answer: "Respiratory Syncytial Virus (RSV)" },
+        { q: "What is the surgical treatment for Hirschsprung's Disease (Congenital Aganglionic Megacolon)?", options: ["Surgical resection of aganglionic bowel segment", "Pyloromyotomy", "Nissen fundoplication", "Reduction of intussusception by barium enema"], answer: "Surgical resection of aganglionic bowel segment" },
+        { q: "Which symptom is classic for Hypertrophic Pyloric Stenosis in an infant aged 2-6 weeks?", options: ["Non-bilious projectile vomiting after feedings and olive-shaped mass in RUQ", "Bilious vomiting and red currant jelly stool", "Abdominal distension and failure to pass meconium", "Severe watery diarrhea and fever"], answer: "Non-bilious projectile vomiting after feedings and olive-shaped mass in RUQ" },
+        { q: "Currant-jelly stools containing blood and mucus are characteristic of:", options: ["Intussusception", "Pyloric stenosis", "Celiac disease", "Hirschsprung disease"], answer: "Intussusception" },
+        { q: "Which intervention is first-line non-surgical treatment for Intussusception in children?", options: ["Air or Contrast Hydrostatic Enema", "Emergency laparotomy", "Nasogastric decompression", "High-dose antibiotics"], answer: "Air or Contrast Hydrostatic Enema" },
+        { q: "What is the principle cause of Kernicterus in neonates?", options: ["Unconjugated bilirubin crossing blood-brain barrier causing neural damage", "High levels of conjugated bilirubin in CSF", "Severe neonatal hypoglycemia", "Bacterial invasion of meninges"], answer: "Unconjugated bilirubin crossing blood-brain barrier causing neural damage" },
+        { q: "The fontanelle that is diamond-shaped and normally closes between 12 to 18 months of age is the:", options: ["Anterior fontanelle", "Posterior fontanelle", "Mastoid fontanelle", "Sphenoidal fontanelle"], answer: "Anterior fontanelle" },
+        { q: "Posterior fontanelle typically closes by:", options: ["2 to 3 months of age", "6 to 8 months of age", "12 to 18 months of age", "24 months of age"], answer: "2 to 3 months of age" }
+    ],
+    "Psychiatric Nursing": [
+        { q: "Which term describes a fixed, false belief that cannot be changed by logical reasoning or evidence?", options: ["Delusion", "Hallucination", "Illusion", "Obsession"], answer: "Delusion" },
+        { q: "A patient reports hearing voices telling him to hurt himself when nobody is in the room. This is documented as:", options: ["Auditory Hallucination", "Auditory Illusion", "Delusion of Control", "Ideas of Reference"], answer: "Auditory Hallucination" },
+        { q: "What is the misinterpretation or misperception of a real external sensory stimulus called?", options: ["Illusion", "Hallucination", "Delusion", "Neologism"], answer: "Illusion" },
+        { q: "Which defense mechanism involves unconscious transfer of unwanted feelings from original source to a safer target?", options: ["Displacement", "Projection", "Rationalization", "Sublimation"], answer: "Displacement" },
+        { q: "Attributing one's own unacceptable thoughts or feelings onto another individual is known as:", options: ["Projection", "Reaction Formation", "Repression", "Introjection"], answer: "Projection" },
+        { q: "Which phase of therapeutic nurse-patient relationship involves establishing trust and setting boundaries?", options: ["Orientation phase", "Working phase", "Termination phase", "Pre-interaction phase"], answer: "Orientation phase" },
+        { q: "Extrapyramidal side effects (EPS) caused by typical antipsychotics are primarily due to blockade of which neurotransmitter receptor?", options: ["Dopamine D2 receptors", "Serotonin 5-HT2A receptors", "Acetylcholine receptors", "GABA receptors"], answer: "Dopamine D2 receptors" },
+        { q: "A potentially life-threatening reaction to antipsychotics characterized by muscle rigidity, high fever, altered mental status, and autonomic instability is:", options: ["Neuroleptic Malignant Syndrome (NMS)", "Tardive Dyskinesia", "Serotonin Syndrome", "Agranulocytosis"], answer: "Neuroleptic Malignant Syndrome (NMS)" },
+        { q: "Patients receiving Clozapine require regular monitoring of which laboratory parameter due to risk of agranulocytosis?", options: ["Absolute Neutrophil Count (ANC) / White Blood Cell Count", "Serum Creatinine", "Liver Function Tests", "Platelet Count"], answer: "Absolute Neutrophil Count (ANC) / White Blood Cell Count" },
+        { q: "What is the therapeutic serum concentration range for Lithium in treating Acute Mania?", options: ["0.6 to 1.2 mEq/L", "1.5 to 2.5 mEq/L", "0.2 to 0.5 mEq/L", "3.0 to 4.5 mEq/L"], answer: "0.6 to 1.2 mEq/L" },
+        { q: "Which early sign suggests Lithium toxicity?", options: ["Fine hand tremor, nausea, and diarrhea", "Coarse hand tremors, ataxia, and confusion", "Seizures and coma", "Severe hypertension"], answer: "Coarse hand tremors, ataxia, and confusion" },
+        { q: "Patients taking Monoamine Oxidase Inhibitors (MAOIs) must strictly avoid foods rich in tyramine to prevent:", options: ["Hypertensive Crisis", "Serotonin Syndrome", "Agranulocytosis", "Severe Hypoglycemia"], answer: "Hypertensive Crisis" },
+        { q: "Which food item must be avoided by a client taking an MAOI?", options: ["Aged cheeses, red wine, and cured meats", "Fresh apples, oranges, and bananas", "White bread, rice, and pasta", "Fresh poultry and pasteurized milk"], answer: "Aged cheeses, red wine, and cured meats" },
+        { q: "What is the hallmark symptom of Major Depressive Disorder?", options: ["Anhedonia (loss of interest/pleasure) and depressed mood", "Grandiosity and flight of ideas", "Visual hallucinations and catatonia", "Rapid mood shifts within minutes"], answer: "Anhedonia (loss of interest/pleasure) and depressed mood" },
+        { q: "Which question is most critical for a nurse to ask during a suicide risk assessment?", options: ["'Are you thinking about ending your life, and do you have a specific plan?'", "'Do you feel sad today?'", "'Why do you think life is not worth living?'", "'Has anyone in your family committed suicide?'"], answer: "'Are you thinking about ending your life, and do you have a specific plan?'" },
+        { q: "Bipolar I Disorder is distinguished from Bipolar II Disorder by the presence of:", options: ["At least one full manic episode", "Only hypomanic episodes with major depression", "Persistent dysthymic disorder", "Cyclothymic mood shifts"], answer: "At least one full manic episode" },
+        { q: "Flight of ideas, pressure of speech, and grandiosity are characteristic of:", options: ["Manic phase of Bipolar Disorder", "Catatonic Schizophrenia", "Generalized Anxiety Disorder", "Obsessive-Compulsive Disorder"], answer: "Manic phase of Bipolar Disorder" },
+        { q: "Which symptom belongs to the 'Negative Symptoms' category of Schizophrenia?", options: ["Avolition, apathy, and flat affect", "Auditory hallucinations", "Delusions of persecution", "Disorganized speech"], answer: "Avolition, apathy, and flat affect" },
+        { q: "A client states, 'The TV news anchor is speaking directly to me in code.' This is an example of:", options: ["Idea of Reference", "Delusion of Grandeur", "Somatic Delusion", "Thought Insertion"], answer: "Idea of Reference" },
+        { q: "Waxy flexibility and stupor are classic symptoms of which subtype of Schizophrenia?", options: ["Catatonic Schizophrenia", "Paranoid Schizophrenia", "Disorganized Schizophrenia", "Residual Schizophrenia"], answer: "Catatonic Schizophrenia" },
+        { q: "Which class of medication is considered first-line pharmacotherapy for Generalized Anxiety Disorder and Panic Disorder?", options: ["Selective Serotonin Reuptake Inhibitors (SSRIs)", "First-generation antipsychotics", "Barbiturates", "Mood stabilizers"], answer: "Selective Serotonin Reuptake Inhibitors (SSRIs)" },
+        { q: "What is the primary feature of Obsessive-Compulsive Disorder (OCD)?", options: ["Recurrent intrusive thoughts (obsessions) and repetitive behaviors (compulsions)", "Multiple personalities executing distinct roles", "Flashbacks and avoidance following trauma", "Panic attacks in open public areas"], answer: "Recurrent intrusive thoughts (obsessions) and repetitive behaviors (compulsions)" },
+        { q: "The main therapeutic intervention for a patient experiencing a severe Panic Attack is to:", options: ["Stay with the patient and speak in simple, calm, short sentences", "Encourage the patient to express deep traumatic memories", "Leave the room to give privacy", "Restrain the patient immediately"], answer: "Stay with the patient and speak in simple, calm, short sentences" },
+        { q: "Flashbacks, intrusive memories, night terrors, and hyperarousal following severe trauma characterize:", options: ["Post-Traumatic Stress Disorder (PTSD)", "Acute Stress Reaction", "Adjustment Disorder", "Dissociative Identity Disorder"], answer: "Post-Traumatic Stress Disorder (PTSD)" },
+        { q: "Korsakoff's Syndrome in chronic alcoholism is caused by a deficiency in:", options: ["Thiamine (Vitamin B1)", "Pyridoxine (Vitamin B6)", "Niacin (Vitamin B3)", "Cobalamin (Vitamin B12)"], answer: "Thiamine (Vitamin B1)" },
+        { q: "Delirium Tremens (DTs) in alcohol withdrawal typically onset within what timeframe following last intake?", options: ["48 to 72 hours", "6 to 12 hours", "12 to 24 hours", "7 to 10 days"], answer: "48 to 72 hours" },
+        { q: "Which drug is prescribed as a sensitizing agent (aversion therapy) for chronic alcohol dependence?", options: ["Disulfiram (Antabuse)", "Naltrexone", "Acamprosate", "Methadone"], answer: "Disulfiram (Antabuse)" },
+        { q: "Anorexia Nervosa is primarily characterized by:", options: ["Intense fear of weight gain, body image distortion, and severe restriction of intake", "Recurrent episodes of binge eating followed by purging", "Eating non-food substances", "Compulsive overeating without purging"], answer: "Intense fear of weight gain, body image distortion, and severe restriction of intake" },
+        { q: "Which physical sign is characteristic of Bulimia Nervosa due to frequent self-induced vomiting?", options: ["Russell's sign (calluses on knuckles) and dental enamel erosion", "Lanugo hair over body", "Severe emaciation and bradycardia", "Parotid gland atrophy"], answer: "Russell's sign (calluses on knuckles) and dental enamel erosion" },
+        { q: "A client with Borderline Personality Disorder frequently demonstrates:", options: ["Splitting behavior (viewing people as all good or all bad) and emotional instability", "Social detachment and flat affect", "Lack of remorse and disregard for rights of others", "Extreme perfectionism and orderliness"], answer: "Splitting behavior (viewing people as all good or all bad) and emotional instability" },
+        { q: "Which personality disorder is characterized by a pervasive pattern of disregard for and violation of the rights of others?", options: ["Antisocial Personality Disorder", "Borderline Personality Disorder", "Histrionic Personality Disorder", "Narcissistic Personality Disorder"], answer: "Antisocial Personality Disorder" },
+        { q: "In Neuroleptic Malignant Syndrome, which lab elevation is characteristically marked?", options: ["Creatine Kinase (CK / CPK)", "Serum Amylase", "Blood Urea Nitrogen", "Thyroid Stimulating Hormone"], answer: "Creatine Kinase (CK / CPK)" },
+        { q: "Tardive Dyskinesia is characterized by:", options: ["Involuntary choreoathetoid movements of tongue, face, and jaw", "Sudden muscle spasms of neck (torticollis)", "Inability to sit still (restlessness)", "Muscle rigidity and tremor"], answer: "Involuntary choreoathetoid movements of tongue, face, and jaw" },
+        { q: "Akathisia is defined as:", options: ["Subjective motor restlessness and compulsion to keep moving", "Involuntary muscle spasms", "Slow slurred speech", "Inability to perform purposeful movements"], answer: "Subjective motor restlessness and compulsion to keep moving" },
+        { q: "Which antidepressant class requires monitoring for Serotonin Syndrome when combined with other serotonergic agents?", options: ["SSRIs and SNRIs", "Tricyclic Antidepressants", "Benzodiazepines", "Barbiturates"], answer: "SSRIs and SNRIs" },
+        { q: "Serotonin Syndrome is characterized by which clinical triad?", options: ["Mental status change, Autonomic hyperactivity, Neuromuscular abnormalities", "Hypotension, Bradycardia, Hypothermia", "Rigidity, Hyperthermia, Agranulocytosis", "Sedation, Weight gain, Constipation"], answer: "Mental status change, Autonomic hyperactivity, Neuromuscular abnormalities" },
+        { q: "Electroconvulsive Therapy (ECT) is primarily indicated for:", options: ["Severe treatment-resistant Depression with acute suicidal risk", "Mild Generalized Anxiety Disorder", "Antisocial Personality Disorder", "Obsessive Compulsive Disorder"], answer: "Severe treatment-resistant Depression with acute suicidal risk" },
+        { q: "What is a common temporary side effect following ECT treatment?", options: ["Retrograde and anterograde amnesia and confusion", "Permanent loss of long-term memory", "Grand mal epileptic state", "Hypertensive crisis"], answer: "Retrograde and anterograde amnesia and confusion" },
+        { q: "Which pre-ECT medication is administered to reduce salivary secretions and prevent bradycardia?", options: ["Atropine Sulfate", "Succinylcholine", "Methohexital", "Diazepam"], answer: "Atropine Sulfate" },
+        { q: "In Freud's psychoanalytic theory, which structural component operates on the 'Reality Principle'?", options: ["Ego", "Id", "Superego", "Unconscious"], answer: "Ego" },
+        { q: "Which component of personality according to Freud represents internalized moral standards and conscience?", options: ["Superego", "Ego", "Id", "Libido"], answer: "Superego" },
+        { q: "A client who fabricates stories to fill in memory gaps without intention to deceive is exhibiting:", options: ["Confabulation", "Lying", "Flight of ideas", "Neologism"], answer: "Confabulation" },
+        { q: "Confabulation is classically observed in clients suffering from:", options: ["Korsakoff's Psychosis / Dementia", "Schizophrenia", "Bipolar Mania", "Major Depression"], answer: "Korsakoff's Psychosis / Dementia" },
+        { q: "Which defense mechanism involves channeling unacceptable impulses into socially acceptable actions?", options: ["Sublimation", "Displacement", "Reaction Formation", "Repression"], answer: "Sublimation" },
+        { q: "Conscious exclusion of unacceptable thoughts or feelings from awareness is called:", options: ["Suppression", "Repression", "Denial", "Dissociation"], answer: "Suppression" },
+        { q: "Unconscious involuntary blocking of painful memories or impulses from awareness is termed:", options: ["Repression", "Suppression", "Rationalization", "Projection"], answer: "Repression" },
+        { q: "Coining completely new words that have private meaning only to the speaker is called:", options: ["Neologisms", "Word Salad", "Clang Association", "Echolalia"], answer: "Neologisms" },
+        { q: "Pathological repeating of words or phrases spoken by another person is termed:", options: ["Echolalia", "Echopraxia", "Aphasia", "Perseveration"], answer: "Echolalia" },
+        { q: "Involuntary imitation of another person's physical movements is termed:", options: ["Echopraxia", "Echolalia", "Ataxia", "Apraxia"], answer: "Echopraxia" },
+        { q: "A patient with schizophrenia states, 'The cat sat flat on the mat with a hat and a rat.' This speech pattern is:", options: ["Clang Association", "Neologism", "Word Salad", "Tangentiality"], answer: "Clang Association" }
+    ],
+    "Community Health Nursing": [
+        { q: "What is the primary focus of Community Health Nursing?", options: ["Health promotion, disease prevention, and health maintenance of populations", "Curative treatment of acute tertiary illness", "Individual patient rehabilitation in ICU settings", "Specialized surgical nursing care"], answer: "Health promotion, disease prevention, and health maintenance of populations" },
+        { q: "Immunization against vaccine-preventable diseases is an example of which level of prevention?", options: ["Primary Prevention", "Secondary Prevention", "Tertiary Prevention", "Quaternary Prevention"], answer: "Primary Prevention" },
+        { q: "Screening programs such as mammography and Pap smears represent which level of prevention?", options: ["Secondary Prevention", "Primary Prevention", "Tertiary Prevention", "Health Promotion"], answer: "Secondary Prevention" },
+        { q: "Rehabilitation and physical therapy following a cerebrovascular accident (stroke) represent:", options: ["Tertiary Prevention", "Secondary Prevention", "Primary Prevention", "Health Promotion"], answer: "Tertiary Prevention" },
+        { q: "Epidemiology is best defined as the study of:", options: ["Distribution and determinants of health states or events in specified populations", "Individual disease processes in clinical settings", "Chemical composition of infectious pathogens", "Statistical management of hospital bed occupancy"], answer: "Distribution and determinants of health states or events in specified populations" },
+        { q: "In the Epidemiological Triad, what three elements interact to cause disease?", options: ["Host, Agent, and Environment", "Person, Place, and Time", "Vector, Pathogen, and Carrier", "Primary, Secondary, and Tertiary causes"], answer: "Host, Agent, and Environment" },
+        { q: "An epidemic that spreads across multiple countries or continents affecting a large number of people is termed a/an:", options: ["Pandemic", "Endemic", "Epidemic", "Sporadic outbreak"], answer: "Pandemic" },
+        { q: "A disease that is constantly present at a baseline level within a given geographic area is described as:", options: ["Endemic", "Epidemic", "Pandemic", "Sporadic"], answer: "Endemic" },
+        { q: "Which route is the main mode of transmission for Tuberculosis (TB)?", options: ["Airborne droplet nuclei", "Direct skin contact", "Fecal-oral route", "Bloodborne transmission"], answer: "Airborne droplet nuclei" },
+        { q: "What is the recommended treatment strategy by WHO for effective Tuberculosis control?", options: ["DOTS (Directly Observed Treatment, Short-Course)", "Symptomatic treatment with bronchodilators", "Isolation without medication for 6 months", "Monotherapy with Isoniazid for 2 years"], answer: "DOTS (Directly Observed Treatment, Short-Course)" },
+        { q: "Which indicator measures the number of NEW cases of a disease arising in a population during a specified period?", options: ["Incidence Rate", "Prevalence Rate", "Mortality Rate", "Morbidity Rate"], answer: "Incidence Rate" },
+        { q: "Which metric accounts for BOTH new and existing cases of a disease in a given population at a specific point in time?", options: ["Prevalence Rate", "Incidence Rate", "Attack Rate", "Case Fatality Rate"], answer: "Prevalence Rate" },
+        { q: "Maternal Mortality Ratio (MMR) is typically expressed as maternal deaths per how many live births?", options: ["100,000 live births", "1,000 live births", "10,000 live births", "1,000,000 live births"], answer: "100,000 live births" },
+        { q: "Infant Mortality Rate (IMR) measures deaths of infants under what age per 1,000 live births?", options: ["Under 1 year of age", "Under 28 days of age", "Under 5 years of age", "Under 6 months of age"], answer: "Under 1 year of age" },
+        { q: "Neonatal Mortality Rate specifically measures infant deaths within what timeframe after birth?", options: ["First 28 days of life", "First 7 days of life", "First 1 year of life", "First 60 days of life"], answer: "First 28 days of life" },
+        { q: "Cold Chain system in Community Health refers to:", options: ["System of storing and transporting vaccines within required temperature ranges (2°C to 8°C)", "Refrigeration of blood products in hospitals", "Storage of cadavers in mortuaries", "Transport of surgical instruments"], answer: "System of storing and transporting vaccines within required temperature ranges (2°C to 8°C)" },
+        { q: "Which vaccine in the Expanded Programme on Immunization (EPI) is given at birth in Nigeria?", options: ["BCG, OPV-0, and Hepatitis B-0", "Pentavalent-1 and PCV-1", "Measles and Yellow Fever", "IPV and Rotavirus"], answer: "BCG, OPV-0, and Hepatitis B-0" },
+        { q: "BCG vaccine protects against which disease?", options: ["Tuberculosis", "Diphtheria", "Poliomyelitis", "Pertussis"], answer: "Tuberculosis" },
+        { q: "What site and route are standard for BCG vaccine administration?", options: ["Intradermal injection in left upper arm", "Intramuscular injection in anterolateral thigh", "Subcutaneous injection in right arm", "Oral administration"], answer: "Intradermal injection in left upper arm" },
+        { q: "Pentavalent vaccine protects against which five diseases?", options: ["Diphtheria, Pertussis, Tetanus, Hepatitis B, Hib", "Diphtheria, Polio, Tetanus, Measles, Mumps", "Tuberculosis, Polio, Tetanus, Hepatitis B, Rubella", "Pneumococcus, Rotavirus, Polio, Measles, Tetanus"], answer: "Diphtheria, Pertussis, Tetanus, Hepatitis B, Hib" },
+        { q: "Which vaccine is administered orally as drops?", options: ["Oral Polio Vaccine (OPV) and Rotavirus vaccine", "BCG and Measles vaccine", "Pentavalent and PCV", "Yellow Fever vaccine"], answer: "Oral Polio Vaccine (OPV) and Rotavirus vaccine" },
+        { q: "What is the primary vector transmitting Dengue, Chikungunya, and Zika viruses?", options: ["Aedes mosquito", "Anopheles mosquito", "Culex mosquito", "Tsetse fly"], answer: "Aedes mosquito" },
+        { q: "Which disease is transmitted via water contaminated with infected freshwater snail larvae (cercariae)?", options: ["Schistosomiasis (Bilharziasis)", "Onchocerciasis", "Dracunculiasis", "Lymphatic Filariasis"], answer: "Schistosomiasis (Bilharziasis)" },
+        { q: "River Blindness (Onchocerciasis) is transmitted by the bite of infected:", options: ["Blackfly (Simulium)", "Tsetse fly", "Sandfly", "Mosquito"], answer: "River Blindness (Onchocerciasis) is transmitted by the bite of infected:" },
+        { q: "What vector transmits African Trypanosomiasis (Sleeping Sickness)?", options: ["Tsetse fly (Glossina)", "Blackfly", "Reduviid bug", "Mosquito"], answer: "Tsetse fly (Glossina)" },
+        { q: "The primary strategy for controlling Cholera outbreaks in a community involves:", options: ["Safe water supply, sanitation, hygiene, and Oral Rehydration Therapy", "Mass administration of prophylactic IV antibiotics", "Fumigation of residential areas", "Quarantine of whole towns for 30 days"], answer: "Safe water supply, sanitation, hygiene, and Oral Rehydration Therapy" },
+        { q: "Oral Rehydration Solution (ORS) formula primarily contains water, glucose, and:", options: ["Sodium chloride, Potassium chloride, and Trisodium citrate", "Calcium carbonate and magnesium sulfate", "Sucrose, iron, and zinc", "High-dose vitamin C"], answer: "Sodium chloride, Potassium chloride, and Trisodium citrate" },
+        { q: "Zinc supplementation in pediatric acute diarrhea helps by:", options: ["Reducing duration and severity of diarrhea and preventing recurrence", "Killing intestinal bacteria directly", "Inducing constipation rapidly", "Neutralizing stomach acid"], answer: "Reducing duration and severity of diarrhea and preventing recurrence" },
+        { q: "Severe Acute Malnutrition (SAM) characterized by severe wasting, loss of subcutaneous fat, and 'old man appearance' is:", options: ["Marasmus", "Kwashiorkor", "Rickets", "Pellagra"], answer: "Marasmus" },
+        { q: "Kwashiorkor is primarily caused by severe deficiency of:", options: ["Protein relative to calories", "Total calorie intake", "Vitamin D and Calcium", "Niacin and Thiamine"], answer: "Protein relative to calories" },
+        { q: "A key clinical differentiator of Kwashiorkor from Marasmus is the presence of:", options: ["Bilateral pitting edema and moon face", "Extreme muscular wasting without edema", "Rachitic rosary on ribs", "Bowed legs"], answer: "Bilateral pitting edema and moon face" },
+        { q: "In Primary Health Care (PHC), Alma-Ata Declaration occurred in which year?", options: ["1978", "1960", "1985", "1995"], answer: "1978" },
+        { q: "Which component is considered the cornerstone of Primary Health Care?", options: ["Community participation, equitable distribution, and essential services", "High-technology tertiary referral hospitals", "Private health insurance coverage", "Specialized surgical care units"], answer: "Community participation, equitable distribution, and essential services" },
+        { q: "In home visits by a Community Health Nurse, what is the primary purpose of 'Bag Technique'?", options: ["To prevent cross-contamination and organize equipment cleanly", "To store personal possessions safely", "To show professional authority", "To carry free medications for distribution"], answer: "To prevent cross-contamination and organize equipment cleanly" },
+        { q: "Water purification method effective at killing bacteria, viruses, and parasites at home level is:", options: ["Boiling vigorously for 1 to 3 minutes", "Filtration through cloth", "Sedimentation", "Aeration"], answer: "Boiling vigorously for 1 to 3 minutes" },
+        { q: "What chemical is widely used for large-scale municipal water disinfection?", options: ["Chlorine", "Fluoride", "Iodine", "Potassium Permanganate"], answer: "Chlorine" },
+        { q: "Which occupational disease affects coal miners due to chronic inhalation of coal dust?", options: ["Anthracosis (Black Lung)", "Silicosis", "Asbestosis", "Byssinosis"], answer: "Anthracosis (Black Lung)" },
+        { q: "Byssinosis is an occupational lung disease caused by inhalation of dust from:", options: ["Cotton, flax, or hemp", "Silica dust in quarries", "Asbestos fibers", "Coal dust"], answer: "Cotton, flax, or hemp" },
+        { q: "Silicosis affects workers exposed to dust in which industry?", options: ["Mining, quarrying, and sandblasting", "Textile mills", "Grain handling", "Sugarcane processing"], answer: "Silicosis affects workers exposed to dust in which industry?" },
+        { q: "Which vector transmits Leishmaniasis?", options: ["Sandfly (Phlebotomus)", "Blackfly", "Tsetse fly", "Mosquito"], answer: "Sandfly (Phlebotomus)" },
+        { q: "Herd immunity protects unimmunized individuals when:", options: ["A large proportion of the population is immune to the infectious agent", "All individuals take daily vitamins", "Infectious vectors are completely eradicated", "The pathogen undergoes mutation"], answer: "A large proportion of the population is immune to the infectious agent" },
+        { q: "Which vitamin deficiency causes Xerophthalmia and night blindness in community health settings?", options: ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin E"], answer: "Vitamin A" },
+        { q: "Iodine deficiency in a community leads to which public health problems?", options: ["Goiter, Cretinism, and impaired cognitive development", "Scurvy and bleeding gums", "Rickets and osteomalacia", "Pellagra and dermatitis"], answer: "Goiter, Cretinism, and impaired cognitive development" },
+        { q: "Pellagra is caused by deficiency of which vitamin?", options: ["Niacin (Vitamin B3)", "Thiamine (Vitamin B1)", "Riboflavin (Vitamin B2)", "Folic Acid"], answer: "Niacin (Vitamin B3)" },
+        { q: "Classic 4 'D's of Pellagra are:", options: ["Dermatitis, Diarrhea, Dementia, Death", "Dyspnea, Dysphagia, Dysuria, Death", "Dehydration, Depression, Delirium, Dermatitis", "Dizziness, Diplopia, Dyspepsia, Death"], answer: "Dermatitis, Diarrhea, Dementia, Death" },
+        { q: "Which waste disposal method is safest for sharp medical waste like needles and scalpels?", options: ["Incineration / Disposal in puncture-proof Safety Box", "Open dumping in community pits", "Composting", "Discharge into public sewage"], answer: "Incineration / Disposal in puncture-proof Safety Box" },
+        { q: "Integrated Management of Childhood Illness (IMCI) focuses on managing major causes of child mortality including:", options: ["Pneumonia, Diarrhea, Malaria, Measles, Malnutrition", "Congenital heart disease and childhood cancers", "Surgical trauma and fractures", "Endocrine and metabolic disorders"], answer: "Pneumonia, Diarrhea, Malaria, Measles, Malnutrition" },
+        { q: "In IMCI color-coded triage system, RED color coding indicates:", options: ["Urgent referral to hospital required after pre-referral treatment", "Outpatient health facility management required", "Home care management by caregiver", "Routine follow-up in 14 days"], answer: "Urgent referral to hospital required after pre-referral treatment" },
+        { q: "YELLOW color coding in IMCI triage signifies:", options: ["Specific medical treatment and advice at health facility", "Immediate hospital emergency admission", "Simple home care instructions", "No treatment needed"], answer: "Specific medical treatment and advice at health facility" },
+        { q: "GREEN color coding in IMCI triage signifies:", options: ["Home management with caregiver advice on supportive care", "Urgent hospital referral", "Inpatient antibiotic therapy", "Surgical intervention"], answer: "Home management with caregiver advice on supportive care" }
+    ]
+};
+
+// Application State Variables
+let selectedSubject = null;
+let currentExamQuestions = [];
+let userAnswers = {};
+let currentQuestionIndex = 0;
+let examTimerInterval = null;
+let timeRemainingSeconds = 1800; // 30 minutes
+let isExamSubmitted = false;
+
+// Initialize Web Application on DOM Ready
+document.addEventListener("DOMContentLoaded", function() {
+    renderSubjectSelector();
+    populateAdminSubjectDropdown();
+    renderAdminQuestionList();
+});
+
+// Registration Form Validation
+function validateRegistrationForm() {
+    const name = document.getElementById("student-name").value.trim();
+    const regno = document.getElementById("student-regno").value.trim();
+    const startBtn = document.getElementById("start-btn");
+    
+    if (name.length > 0 && regno.length > 0 && selectedSubject !== null) {
+        startBtn.disabled = false;
+    } else {
+        startBtn.disabled = true;
+    }
+}
+
+// Render Subject Selector Grid
+function renderSubjectSelector() {
+    const container = document.getElementById("subject-selector-grid");
+    container.innerHTML = "";
+    
+    const subjects = Object.keys(rawQuestionBank);
+    subjects.forEach(subject => {
+        const isSelected = selectedSubject === subject;
+        const card = document.createElement("div");
+        card.className = `subject-card ${isSelected ? 'selected' : ''}`;
+        card.onclick = () => selectSubject(subject);
+        
+        card.innerHTML = `
+            <input type="radio" name="course-selection" ${isSelected ? 'checked' : ''} onclick="event.stopPropagation(); selectSubject('${subject}');">
+            <span>${subject}</span>
+        `;
+        container.appendChild(card);
+    });
+    
+    document.getElementById("selection-counter").textContent = selectedSubject ? `Selected: ${selectedSubject}` : "Selected: None";
+    validateRegistrationForm();
+}
+
+function selectSubject(subject) {
+    selectedSubject = subject;
+    renderSubjectSelector();
+}
+
+// Admin Password Handling
+function checkAdminPassword() {
+    const input = document.getElementById("admin-password-input").value;
+    const errorMsg = document.getElementById("admin-password-error");
+    
+    if (input === "admin123" || input === "STARSAINT7" || input === "admin") {
+        document.getElementById("admin-lock-screen").style.display = "none";
+        document.getElementById("admin-content").style.display = "block";
+        errorMsg.style.display = "none";
+        renderAdminScoreTable();
+    } else {
+        errorMsg.style.display = "block";
+    }
+}
+
+function lockAdminSection() {
+    document.getElementById("admin-password-input").value = "";
+    document.getElementById("admin-lock-screen").style.display = "block";
+    document.getElementById("admin-content").style.display = "none";
+}
+
+// Admin Questions & Subject Management
+function populateAdminSubjectDropdown() {
+    const select = document.getElementById("admin-subject-select");
+    select.innerHTML = "";
+    const subjects = Object.keys(rawQuestionBank);
+    subjects.forEach(sub => {
+        const opt = document.createElement("option");
+        opt.value = sub;
+        opt.textContent = sub;
+        select.appendChild(opt);
+    });
+}
+
+function addNewSubject() {
+    const input = document.getElementById("new-subject-name");
+    const name = input.value.trim();
+    if (!name) return;
+    
+    if (rawQuestionBank[name]) {
+        alert("This course already exists.");
+        return;
+    }
+    
+    rawQuestionBank[name] = [];
+    input.value = "";
+    renderSubjectSelector();
+    populateAdminSubjectDropdown();
+    document.getElementById("admin-subject-select").value = name;
+    renderAdminQuestionList();
+}
+
+function deleteSelectedSubject() {
+    const select = document.getElementById("admin-subject-select");
+    const subject = select.value;
+    if (!subject) return;
+    
+    if (confirm(`Are you sure you want to delete course '${subject}' and all its questions?`)) {
+        delete rawQuestionBank[subject];
+        if (selectedSubject === subject) selectedSubject = null;
+        
+        renderSubjectSelector();
+        populateAdminSubjectDropdown();
+        renderAdminQuestionList();
+    }
+}
+
+function renderAdminQuestionList() {
+    const subject = document.getElementById("admin-subject-select").value;
+    const container = document.getElementById("admin-question-list");
+    container.innerHTML = "";
+    
+    if (!subject || !rawQuestionBank[subject]) return;
+    
+    const list = rawQuestionBank[subject];
+    const header = document.createElement("h4");
+    header.textContent = `Questions in ${subject} (${list.length} total)`;
+    container.appendChild(header);
+    
+    list.forEach((q, idx) => {
+        const item = document.createElement("div");
+        item.style.cssText = "background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; margin-bottom: 10px;";
+        
+        let optsHtml = q.options.map((opt, i) => `<div style="${opt === q.answer ? 'font-weight: bold; color: #15803d;' : ''}">• ${String.fromCharCode(65+i)}: ${opt} ${opt === q.answer ? '(Correct Answer)' : ''}</div>`).join("");
+        
+        item.innerHTML = `
+            <div style="font-weight: bold; margin-bottom: 6px;">Q${idx + 1}: ${q.q}</div>
+            <div style="font-size: 13px; margin-bottom: 8px;">${optsHtml}</div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;" onclick="editQuestion(${idx})">Edit</button>
+                <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px; background: #dc2626;" onclick="deleteQuestion(${idx})">Delete</button>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function editQuestion(index) {
+    const subject = document.getElementById("admin-subject-select").value;
+    const q = rawQuestionBank[subject][index];
+    
+    document.getElementById("edit-question-index").value = index;
+    document.getElementById("question-form-title").textContent = `Edit Question #${index + 1}`;
+    document.getElementById("new-question-text").value = q.q;
+    
+    q.options.forEach((opt, i) => {
+        document.getElementById(`option-input-${i}`).value = opt;
+        if (opt === q.answer) {
+            document.getElementById(`correct-radio-${i}`).checked = true;
+        }
+    });
+}
+
+function cancelQuestionEdit() {
+    document.getElementById("edit-question-index").value = "-1";
+    document.getElementById("question-form-title").textContent = "Add New Question";
+    document.getElementById("new-question-text").value = "";
+    for (let i = 0; i < 4; i++) {
+        document.getElementById(`option-input-${i}`).value = "";
+    }
+    document.getElementById("correct-radio-0").checked = true;
+}
+
+function saveQuestion() {
+    const subject = document.getElementById("admin-subject-select").value;
+    if (!subject) return;
+    
+    const qText = document.getElementById("new-question-text").value.trim();
+    const opts = [
+        document.getElementById("option-input-0").value.trim(),
+        document.getElementById("option-input-1").value.trim(),
+        document.getElementById("option-input-2").value.trim(),
+        document.getElementById("option-input-3").value.trim()
+    ];
+    
+    const radios = document.getElementsByName("correct-option-radio");
+    let selectedRadioVal = 0;
+    radios.forEach(r => { if (r.checked) selectedRadioVal = parseInt(r.value); });
+    
+    if (!qText || opts.some(o => !o)) {
+        alert("Please complete the question text and all four options.");
+        return;
+    }
+    
+    const newQObj = {
+        q: qText,
+        options: opts,
+        answer: opts[selectedRadioVal]
+    };
+    
+    const editIdx = parseInt(document.getElementById("edit-question-index").value);
+    if (editIdx >= 0) {
+        rawQuestionBank[subject][editIdx] = newQObj;
+    } else {
+        rawQuestionBank[subject].push(newQObj);
+    }
+    
+    cancelQuestionEdit();
+    renderAdminQuestionList();
+}
+
+function deleteQuestion(index) {
+    const subject = document.getElementById("admin-subject-select").value;
+    if (confirm("Are you sure you want to delete this question?")) {
+        rawQuestionBank[subject].splice(index, 1);
+        renderAdminQuestionList();
+    }
+}
+
+// Admin Score Tracking & Local Storage
+function saveExamResultToLocalStorage(resultObj) {
+    let records = JSON.parse(localStorage.getItem("nursing_cbt_scores") || "[]");
+    records.unshift(resultObj);
+    localStorage.setItem("nursing_cbt_scores", JSON.stringify(records));
+}
+
+function renderAdminScoreTable() {
+    const tbody = document.getElementById("scores-table-body");
+    tbody.innerHTML = "";
+    let records = JSON.parse(localStorage.getItem("nursing_cbt_scores") || "[]");
+    
+    if (records.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b;">No saved exam results found.</td></tr>`;
+        return;
+    }
+    
+    records.forEach(rec => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${rec.date}</td>
+            <td>${rec.regNo}</td>
+            <td>${rec.name}</td>
+            <td>${rec.gender}</td>
+            <td style="font-weight: bold; color: var(--nursing-blue);">${rec.totalScore} / 100</td>
+            <td style="font-size: 13px; font-weight: 600;">${rec.subject}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function exportScoresCSV() {
+    let records = JSON.parse(localStorage.getItem("nursing_cbt_scores") || "[]");
+    if (records.length === 0) {
+        alert("No score records available to export.");
+        return;
+    }
+    
+    let csvContent = "data:text/csv;charset=utf-8,Date & Time,Reg Number,Full Name,Gender,Total Score,Course\n";
+    records.forEach(r => {
+        csvContent += `"${r.date}","${r.regNo}","${r.name}","${r.gender}","${r.totalScore}","${r.subject}"\n`;
+    });
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `nursing_cbt_scores_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function clearScoreRecords() {
+    if (confirm("Are you sure you want to clear all score records? This action cannot be undone.")) {
+        localStorage.removeItem("nursing_cbt_scores");
+        renderAdminScoreTable();
+    }
+}
+
+// Examination Mechanics & Flow
+function shuffleArray(array) {
+    let arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+function startExam() {
+    if (!selectedSubject) return;
+    
+    currentExamQuestions = [];
+    userAnswers = {};
+    currentQuestionIndex = 0;
+    
+    let available = rawQuestionBank[selectedSubject] || [];
+    let pool = shuffleArray(available).slice(0, 50);
+    
+    pool.forEach((q, idx) => {
+        currentExamQuestions.push({
+            subject: selectedSubject,
+            subjectQuestionNum: idx + 1,
+            questionText: q.q,
+            options: q.options,
+            correctAnswer: q.answer
+        });
+    });
+    
+    // Switch Screens
+    document.getElementById("setup-screen").classList.remove("active-screen");
+    document.getElementById("exam-screen").classList.add("active-screen");
+    document.getElementById("timer-box").style.display = "block";
+    
+    renderSubjectTabs();
+    renderPalette();
+    loadQuestion(0);
+    startTimer();
+}
+
+function renderSubjectTabs() {
+    const tabsContainer = document.getElementById("subject-tabs");
+    tabsContainer.innerHTML = "";
+    
+    const btn = document.createElement("button");
+    btn.className = 'tab-btn active-tab';
+    btn.textContent = selectedSubject;
+    tabsContainer.appendChild(btn);
+}
+
+function loadQuestion(index) {
+    currentQuestionIndex = index;
+    const q = currentExamQuestions[index];
+    
+    document.getElementById("question-tracker").textContent = `Course: ${q.subject} • Question ${index + 1} of ${currentExamQuestions.length}`;
+    document.getElementById("question-text").textContent = `${index + 1}. ${q.questionText}`;
+    
+    const container = document.getElementById("options-container");
+    container.innerHTML = "";
+    
+    q.options.forEach((opt, idx) => {
+        const btn = document.createElement("div");
+        btn.className = `option-btn ${userAnswers[index] === opt ? 'selected' : ''}`;
+        btn.onclick = () => selectOption(index, opt);
+        
+        btn.innerHTML = `
+            <strong>${String.fromCharCode(65 + idx)}.</strong>
+            <span>${opt}</span>
+        `;
+        container.appendChild(btn);
+    });
+    
+    updateAnsweredTracker();
+    updatePaletteHighlight();
+}
+
+function selectOption(qIndex, optionText) {
+    userAnswers[qIndex] = optionText;
+    loadQuestion(qIndex);
+    renderPalette();
+}
+
+function navigate(direction) {
+    let target = currentQuestionIndex + direction;
+    if (target >= 0 && target < currentExamQuestions.length) {
+        loadQuestion(target);
+    }
+}
+
+function updateAnsweredTracker() {
+    const count = Object.keys(userAnswers).length;
+    document.getElementById("answered-tracker").textContent = `Answered: ${count} / ${currentExamQuestions.length}`;
+}
+
+function renderPalette() {
+    const grid = document.getElementById("palette-grid");
+    grid.innerHTML = "";
+    
+    currentExamQuestions.forEach((q, idx) => {
+        const num = document.createElement("div");
+        num.className = `palette-num ${userAnswers[idx] !== undefined ? 'answered' : ''} ${idx === currentQuestionIndex ? 'current' : ''}`;
+        num.textContent = idx + 1;
+        num.onclick = () => loadQuestion(idx);
+        grid.appendChild(num);
+    });
+}
+
+function updatePaletteHighlight() {
+    const items = document.querySelectorAll(".palette-num");
+    items.forEach((item, idx) => {
+        if (idx === currentQuestionIndex) {
+            item.classList.add("current");
+        } else {
+            item.classList.remove("current");
+        }
+    });
+}
+
+// Timer Logic (30 Minutes = 1800 Seconds)
+function startTimer() {
+    timeRemainingSeconds = 1800;
+    updateTimerDisplay();
+    
+    examTimerInterval = setInterval(() => {
+        timeRemainingSeconds--;
+        updateTimerDisplay();
+        
+        if (timeRemainingSeconds <= 0) {
+            clearInterval(examTimerInterval);
+            alert("Time is up! Your examination will now be submitted automatically.");
+            submitExam();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const hours = Math.floor(timeRemainingSeconds / 3600);
+    const minutes = Math.floor((timeRemainingSeconds % 3600) / 60);
+    const seconds = timeRemainingSeconds % 60;
+    
+    const pad = num => String(num).padStart(2, '0');
+    document.getElementById("timer-box").textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
+// Submission & Results
+function confirmSubmission() {
+    const answeredCount = Object.keys(userAnswers).length;
+    const totalCount = currentExamQuestions.length;
+    
+    if (confirm(`You have answered ${answeredCount} out of ${totalCount} questions. Are you sure you want to submit your examination now?`)) {
+        clearInterval(examTimerInterval);
+        submitExam();
+    }
+}
+
+function submitExam() {
+    isExamSubmitted = true;
+    let totalScore = 0;
+    
+    currentExamQuestions.forEach((q, idx) => {
+        if (userAnswers[idx] === q.correctAnswer) {
+            totalScore += 2; // 2 marks per question = 100 marks total
+        }
+    });
+    
+    const name = document.getElementById("student-name").value.trim() || "N/A";
+    const regNo = document.getElementById("student-regno").value.trim() || "N/A";
+    const gender = document.getElementById("student-gender").value;
+    const dateStr = new Date().toLocaleString();
+    
+    saveExamResultToLocalStorage({
+        date: dateStr,
+        name: name,
+        regNo: regNo,
+        gender: gender,
+        totalScore: totalScore,
+        subject: selectedSubject
+    });
+    
+    document.getElementById("exam-screen").classList.remove("active-screen");
+    document.getElementById("result-screen").classList.add("active-screen");
+    document.getElementById("timer-box").style.display = "none";
+    
+    document.getElementById("candidate-details-display").innerHTML = `Candidate: <strong>${name}</strong> | Reg No: <strong>${regNo}</strong> | Gender: <strong>${gender}</strong>`;
+    document.getElementById("final-aggregate").textContent = `${totalScore} / 100 Marks`;
+    
+    const breakdownContainer = document.getElementById("subject-score-breakdown");
+    breakdownContainer.innerHTML = "";
+    
+    const card = document.createElement("div");
+    card.style.cssText = "background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 15px; font-weight: bold;";
+    card.innerHTML = `${selectedSubject}: <span style="color: var(--nursing-blue);">${totalScore} / 100 Marks</span>`;
+    breakdownContainer.appendChild(card);
+    
+    renderAnswerReview();
+}
+
+function renderAnswerReview() {
+    const container = document.getElementById("review-container");
+    container.innerHTML = "";
+    
+    currentExamQuestions.forEach((q, idx) => {
+        const userAns = userAnswers[idx];
+        const isCorrect = userAns === q.correctAnswer;
+        
+        const card = document.createElement("div");
+        card.className = "review-card";
+        
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-size: 12px; font-weight: bold; color: #64748b;">${q.subject} • Q${idx + 1}</span>
+                <span class="badge ${isCorrect ? 'badge-success' : 'badge-danger'}">${isCorrect ? 'Correct (+2)' : 'Incorrect / Unanswered (0)'}</span>
+            </div>
+            <div style="font-weight: bold; margin-bottom: 10px;">${idx + 1}. ${q.questionText}</div>
+            <div style="font-size: 14px; margin-bottom: 4px;">Your Answer: <strong style="color: ${isCorrect ? '#15803d' : '#b91c1c'};">${userAns || 'Not Answered'}</strong></div>
+            <div style="font-size: 14px;">Correct Answer: <strong style="color: #15803d;">${q.correctAnswer}</strong></div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function resetPortal() {
+    document.getElementById("result-screen").classList.remove("active-screen");
+    document.getElementById("setup-screen").classList.add("active-screen");
+    userAnswers = {};
+    currentExamQuestions = [];
+    currentQuestionIndex = 0;
+    selectedSubject = null;
+    renderSubjectSelector();
+}
+</script>
+</body>
+</html>
