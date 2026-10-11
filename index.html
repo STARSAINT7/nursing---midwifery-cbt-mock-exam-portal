@@ -526,6 +526,7 @@
             </div>
 
             <div id="admin-content" style="display: none;">
+                <p id="sync-status" style="font-size: 13px; margin: 0 0 10px 0;"></p>
                 <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                     <button class="btn btn-csv" onclick="exportScoresCSV()">Export All Scores (CSV)</button>
                     <button class="btn btn-secondary" onclick="clearScoreRecords()" style="background: #dc2626; padding: 12px 16px;">Clear Records</button>
@@ -642,6 +643,64 @@
 </div>
 
 <script>
+// =====================================================================
+// ONLINE RESULTS (Google Sheets)
+// Paste your Google Apps Script Web App URL between the quotes below
+// (it ends with /exec). Leave it empty to run offline-only.
+// =====================================================================
+const SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxlsRYMmdUb1-mVSSZllF0Gv05gPWNIZC6ZB0Vsp3FFL03d_1DQrBRBEPAzXk8TyaoH/exec";
+
+const SYNC_QUEUE_KEY = "nursing_cbt_sync_queue";
+let currentAttemptId = null;
+let examStartedAt = null;
+let examSubmitType = "Manual";
+
+function newAttemptId() {
+    return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+}
+
+function getSyncQueue() {
+    try { return JSON.parse(localStorage.getItem(SYNC_QUEUE_KEY) || "[]"); } catch (e) { return []; }
+}
+
+function setSyncQueue(q) {
+    try { localStorage.setItem(SYNC_QUEUE_KEY, JSON.stringify(q)); } catch (e) {}
+}
+
+// Sends one event to the Google Sheet. If the device is offline, the event is
+// kept and re-sent automatically when the connection returns.
+function syncToSheet(payload) {
+    if (!SHEETS_WEBHOOK_URL) return;
+    try {
+        fetch(SHEETS_WEBHOOK_URL, {
+            method: "POST",
+            mode: "no-cors",
+            keepalive: true,
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload)
+        }).catch(() => {
+            const q = getSyncQueue();
+            q.push(payload);
+            setSyncQueue(q);
+        });
+    } catch (e) {
+        const q = getSyncQueue();
+        q.push(payload);
+        setSyncQueue(q);
+    }
+}
+
+function flushSyncQueue() {
+    if (!SHEETS_WEBHOOK_URL) return;
+    const q = getSyncQueue();
+    if (!q.length) return;
+    setSyncQueue([]);
+    q.forEach(item => syncToSheet(item));
+}
+
+window.addEventListener("online", flushSyncQueue);
+window.addEventListener("load", flushSyncQueue);
+
 const rawQuestionBank = {
     "Medical-Surgical Nursing": [
         { q: "Which of the following is the priority intervention for a patient presenting with an acute myocardial infarction?", options: ["Obtain blood samples for cardiac enzymes", "Administer high-flow oxygen", "Obtain a 12-lead ECG", "Administer sublingual nitroglycerin"], answer: "Administer high-flow oxygen" },
@@ -1286,7 +1345,20 @@ function saveExamResultToLocalStorage(resultObj) {
     localStorage.setItem("nursing_cbt_scores", JSON.stringify(records));
 }
 
+function renderSyncStatus() {
+    const el = document.getElementById("sync-status");
+    if (!el) return;
+    if (!SHEETS_WEBHOOK_URL) {
+        el.innerHTML = '<strong style="color:#b45309;">Online sync: OFF</strong> &mdash; results from other devices are not being sent to Google Sheets. Add the Web App URL in the code to turn it on.';
+        return;
+    }
+    const pending = getSyncQueue().length;
+    el.innerHTML = '<strong style="color:#15803d;">Online sync: ON</strong> &mdash; every start and submission is sent to your Google Sheet.' +
+        (pending ? ' <span style="color:#b45309;">(' + pending + ' waiting to upload from this device)</span>' : '');
+}
+
 function renderAdminScoreTable() {
+    renderSyncStatus();
     const tbody = document.getElementById("scores-table-body");
     tbody.innerHTML = "";
     let records = JSON.parse(localStorage.getItem("nursing_cbt_scores") || "[]");
@@ -1351,6 +1423,11 @@ function shuffleArray(array) {
 function startExam() {
     if (!selectedSubject) return;
     
+    isExamSubmitted = false;
+    examSubmitType = "Manual";
+    currentAttemptId = newAttemptId();
+    examStartedAt = new Date();
+    
     currentExamQuestions = [];
     userAnswers = {};
     currentQuestionIndex = 0;
@@ -1377,6 +1454,17 @@ function startExam() {
     renderPalette();
     loadQuestion(0);
     startTimer();
+    
+    syncToSheet({
+        event: "started",
+        attemptId: currentAttemptId,
+        name: document.getElementById("student-name").value.trim() || "N/A",
+        regNo: document.getElementById("student-regno").value.trim() || "N/A",
+        gender: document.getElementById("student-gender").value,
+        course: selectedSubject,
+        startedAt: examStartedAt.toISOString(),
+        totalQuestions: currentExamQuestions.length
+    });
 }
 
 function renderSubjectTabs() {
@@ -1469,6 +1557,7 @@ function startTimer() {
         if (timeRemainingSeconds <= 0) {
             clearInterval(examTimerInterval);
             alert("Time is up! Your examination will now be submitted automatically.");
+            examSubmitType = "Auto (time up)";
             submitExam();
         }
     }, 1000);
@@ -1495,6 +1584,7 @@ function confirmSubmission() {
 }
 
 function submitExam() {
+    if (isExamSubmitted) return;
     isExamSubmitted = true;
     let totalScore = 0;
     
@@ -1511,6 +1601,23 @@ function submitExam() {
     const regNo = document.getElementById("student-regno").value.trim() || "N/A";
     const gender = document.getElementById("student-gender").value;
     const dateStr = new Date().toLocaleString();
+    
+    syncToSheet({
+        event: "submitted",
+        attemptId: currentAttemptId,
+        name: name,
+        regNo: regNo,
+        gender: gender,
+        course: selectedSubject,
+        startedAt: examStartedAt ? examStartedAt.toISOString() : "",
+        submittedAt: new Date().toISOString(),
+        durationSec: examStartedAt ? Math.round((Date.now() - examStartedAt.getTime()) / 1000) : "",
+        totalQuestions: currentExamQuestions.length,
+        answered: Object.keys(userAnswers).length,
+        correct: correctCount,
+        score: totalScore,
+        submitType: examSubmitType
+    });
     
     saveExamResultToLocalStorage({
         date: dateStr,
